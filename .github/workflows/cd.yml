@@ -1,0 +1,25 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Build da imagem Docker
+        run: docker build -t devops-node-app:${{ github.sha }} .
+
+      - name: Testar container (smoke test)
+        run: |
+          docker run -d -p 3000:3000 --name app-test devops-node-app:${{ github.sha }}
+          sleep 3
+          curl --fail http://localhost:3000/health
+          docker stop app-test
