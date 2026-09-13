@@ -29,3 +29,10 @@ describe('GET /soma/:a/:b', () => {
     expect(res.statusCode).toBe(400);
   });
 });
+
+describe('GET /rota-inexistente', () => {
+  it('deve retornar 404 para uma rota que não existe', async () => {
+    const res = await request(app).get('/rota-inexistente');
+    expect(res.statusCode).toBe(404);
+  });
+});
